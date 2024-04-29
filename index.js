@@ -7,7 +7,12 @@ const bodyParser = require('body-parser'); // Habilitamos bodyParser
 const express = require('express'); // Importar express.
 const app = express();
 const router = require('./routes'); // Integración con router.
-const exphbs = require('express-handlebars'); // Importar la vista con express-handlebars.
+
+// Importar la vista con express-handlebars.
+const handlebars = require('handlebars');
+const exphbs = require('express-handlebars');
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
+
 const path = require('path'); // Importamos path para obtener la URL de elementos
 
 // Habilitamos body parser
@@ -27,7 +32,12 @@ const store = MongoStore.create({
 require('dotenv').config({ path: '.env' });
 
 // Habilitar handlebars como vista debe estar en views/layouts
-app.engine('handlebars', exphbs.engine({ defaultLayout: 'layout', helpers: require('./helpers/handlebars') }));
+app.engine('handlebars', exphbs.engine({
+    handlebars: allowInsecurePrototypeAccess(handlebars),
+    defaultLayout: 'layout',
+    helpers: require('./helpers/handlebars')
+}));
+
 app.set('view engine', 'handlebars');
 
 // Leer archivos estáticos en el directorio public.

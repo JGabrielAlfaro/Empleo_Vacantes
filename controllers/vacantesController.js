@@ -12,7 +12,6 @@ exports.formularioNuevaVacante = (req,res) => {
     })
 }
 
-
 //Agrega las vacantes a la base de datos.
 exports.agregarVacante = async (req,res) => {
     const vacante = new Vacante(req.body); // Se guarda en el modelo.
@@ -26,4 +25,18 @@ exports.agregarVacante = async (req,res) => {
     const nuevaVacante = await vacante.save();
 
     res.redirect(`/vacantes/${nuevaVacante.url}`)
+}
+
+//Mostrar Vacante
+exports.mostrarVacante = async (req,res,next)=>{
+    const vacante = await Vacante.findOne({url: req.params.url})
+
+    //Si no hay resultado.
+    if (!vacante) return next();
+
+    res.render('vacante',{
+        vacante,
+        nombrePagina: vacante.titulo,
+        barra: true,
+    })
 }
