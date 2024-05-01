@@ -4,7 +4,7 @@ const Vacante = mongoose.model('Vacante');
 exports.mostrarTrabajos = async (req,res,next) => {
 
     const vacantes = await Vacante.find();
-     console.log(vacantes);  
+    //  console.log(vacantes);  
     if (!vacantes) return next();
 
     res.render('home',{

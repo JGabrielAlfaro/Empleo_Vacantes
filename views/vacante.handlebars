@@ -11,12 +11,12 @@
 
     <div class="caja">
         <p class="etiqueta">Contrato</p>
-        <p class="nombre">$ {{vacante.contrato}}</p>
+        <p class="nombre"> {{vacante.contrato}}</p>
     </div>
 
     <div class="caja">
         <p class="etiqueta">Salario</p>
-        <p class="nombre">{{vacante.salario}}</p>
+        <p class="nombre">$ {{vacante.salario}}</p>
     </div>
 </div>
 
@@ -24,8 +24,10 @@
     <main class="contenido">
         <h2>Descripción del puesto</h2>
         <div class="vacante-descripcion">
-            {{{vacante.descripcion}}}
+            {{{vacante.descripcion}}} 
         </div>
+
+        <a href="/vacantes/editar/{{vacante.url}}" class="btn btn-azul editar-btn">Editar Vacante</a>
         
     </main>
 
