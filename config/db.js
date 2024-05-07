@@ -13,3 +13,4 @@ module.exports = async () => {
 };
 // Importar los modelos.
 require('../models/Vacantes')
+require('../models/Usuarios')

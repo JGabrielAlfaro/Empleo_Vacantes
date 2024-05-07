@@ -15,9 +15,16 @@ const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-acce
 
 const path = require('path'); // Importamos path para obtener la URL de elementos
 
+//Validaciones
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+
 // Habilitamos body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//Validacion de campos
+ app.use( expressValidator() );
 
 // Mantener una sesión.
 const cookieParser = require('cookie-parser');
@@ -53,6 +60,15 @@ app.use(
         store: store,
     })
 );
+
+//Alertas y flash messages
+app.use( flash() );
+
+//Crear nuestro middleware
+app.use((req,res,next) => {
+    res.locals.mensajes = req.flash();
+    next();
+})
 
 // Configuración del router
 app.use('/', router());

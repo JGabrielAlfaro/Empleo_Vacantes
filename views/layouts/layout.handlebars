@@ -6,7 +6,6 @@
 
      {{!-- CDN para editor --}}
      <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
-     
 
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,700,900" rel="stylesheet">
     <link rel="stylesheet" href="/css/app.css">
@@ -39,13 +38,21 @@
     </header>
 
     <div class="contenido-principal contenedor">
+        {{#if mensajes}}
+            <div class="alertas">
+                {{#mostrarAlertas mensajes}}
+                {{/mostrarAlertas}}
+            </div>
+        {{/if}}
         {{{body}}}
     </div>
 
-    {{!-- CDN TRIX editor de texto --}}
-    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+   
 
     {{!-- CDN TRIX editor de texto --}}
     <script src="/dist/bundle.js"></script>
+
+     {{!-- CDN TRIX editor de texto --}}
+    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
 </body>
 </html>

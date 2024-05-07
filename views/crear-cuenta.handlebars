@@ -1,0 +1,33 @@
+<main class="contenedor">
+    <form action="/crear-cuenta" method="POST" class="default-form">
+
+        <div class="campo">
+            <label for="">Nombre</label>
+            <input type="text" name="nombre" placeholder="Tu Nombre">
+        </div>
+
+        <div class="campo">
+            <label for="">Email</label>
+            <input type="email" name="email" placeholder="Tu Correo Electronico">
+        </div>
+
+        <div class="campo">
+            <label for="">Contraseña</label>
+            <input type="password" name="password" placeholder="Tu Contraseña" autocomplete="false">
+        </div>
+
+        <div class="campo">
+            <label for="">Repetir contraseña</label>
+            <input type="password" name="confirmar" placeholder="Repite tu Contraseña" autocomplete="false">
+        </div>
+
+        <div class="campo acciones">
+            <a href="/iniciar-sesion">Volver a Iniciar Sesión</a>
+        </div>
+
+        <div class="campo">
+            <input type="submit" value="Crear Cuenta" class="btn btn-azul">
+        </div>
+
+    </form>
+</main>
