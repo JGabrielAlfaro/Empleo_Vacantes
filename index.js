@@ -19,6 +19,10 @@ const path = require('path'); // Importamos path para obtener la URL de elemento
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 
+//Validaciones de password
+const passport = require('./config/passport')
+
+
 // Habilitamos body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -60,6 +64,10 @@ app.use(
         store: store,
     })
 );
+
+//Validacion de credenciales login
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Alertas y flash messages
 app.use( flash() );

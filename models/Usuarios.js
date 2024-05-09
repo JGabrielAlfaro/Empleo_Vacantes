@@ -38,6 +38,7 @@ usuarioSCHEMA.pre('save',async function(next){
 
 });
 
+//Envía alerta cuando un usuario se encuentra registrado.
 usuarioSCHEMA.post('save',function(error, doc, next){
     // console.log(error.name)
     if(error.name === "MongoServerError" && error.code === 11000){
@@ -48,4 +49,10 @@ usuarioSCHEMA.post('save',function(error, doc, next){
     }
 })
 
+//Autenticar usuarios.
+usuarioSCHEMA.methods = {
+    comparaPassword: function(password){
+        return bcrypt.compareSync(password, this.password)
+    }
+}
 module.exports = mongoose.model('Usuarios',usuarioSCHEMA)

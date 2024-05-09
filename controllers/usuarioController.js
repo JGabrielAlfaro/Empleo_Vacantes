@@ -61,3 +61,12 @@ exports.validaRegistro = async (req, res, next) => {
     next();
     return;
 };
+
+
+//Formulario para iniciar sesion
+exports.formIniciarSesion = async(req,res) => {
+
+    res.render('iniciar-sesion',{
+        nombrePagina: 'Iniciar Sesión DebJobs'
+    })
+}
