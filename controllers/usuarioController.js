@@ -70,3 +70,65 @@ exports.formIniciarSesion = async(req,res) => {
         nombrePagina: 'Iniciar Sesión DebJobs'
     })
 }
+
+// Form Editar el perfil
+
+exports.formEditarPerfil = (req,res) => {
+    res.render('editar-perfil',{
+        nombrePagina: "Edita tu Perfil en DevJobs",
+        usuario: req.user,
+        cerrarSesion: true,
+        nombre: req.user.nombre,
+    })
+}
+
+// Guardar cambios editar Perfil
+exports.editarPerfil = async (req, res) => {
+    const usuario = await Usuarios.findById(req.user._id);
+    
+    usuario.nombre = req.body.nombre;
+    usuario.email = req.body.email;
+
+
+    if(req.body.password){
+        usuario.password = req.body.password
+    }
+    
+    await usuario.save();
+
+    req.flash('correcto', "Se guardaron los cambios correctamente")
+
+    //Redirigimos al usuario si todo salio bien
+    res.redirect('/administracion');
+}
+
+//Sanitizar y validar el formulario de editar perfil.
+exports.validarPerfil = (req,res,next) => {
+
+    req.sanitizeBody('nombre').escape();
+    req.sanitizeBody('email').escape();
+
+    if(req.body.password){
+        req.sanitizeBody('password').escape();
+    }
+
+    req.checkBody('nombre', "El nombre es Obligatorio").notEmpty();
+    req.checkBody('email', "El e-mail debe ser valido").isEmail();
+
+
+    //Validar errores
+    const errores = req.validationErrors()
+    if(errores){
+        //si hay errores    
+        req.flash('error',errores.map(error => error.msg ));
+        res.render('editar-perfil',{
+            nombrePagina: "Edita tu Perfil en DevJobs",
+            usuario: req.user,
+            cerrarSesion: true,
+            nombre: req.user.nombre,
+            mensajes: req.flash(),
+        })
+    }
+    next(); //Si hay errores no se ejecuta el Middleware.
+
+}

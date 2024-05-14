@@ -27,6 +27,30 @@ exports.mostrarPanel = async (req,res) => {
     res.render('administracion',{
         nombrePagina: "Panel de Administración",
         tagline: 'Crea y Administra tus vacantes desde aquí',
+        cerrarSesion: true,
+        nombre: req.user.nombre,
         vacantes
     })
+}
+
+//Cerrar Sesion
+exports.cerrarSesion = (req,res,next) => {
+    //Forma 1:
+    //req.flash('correcto', 'Sesion Cerrada Correctamente')
+    req.session.destroy(()=>{
+       return res.redirect('/iniciar-sesion') //al cerrar la sesion redireccionamos al formulario de inicio de sesion
+    })
+    
+
+
+
+    //Forma 2:
+    // req.logout((err) => {
+    //     if (err) {
+    //         // Si hay un error al cerrar sesión, pasar al siguiente middleware con el error
+    //         return next(err);
+    //     }
+    //     // Redirigir al usuario a la página de inicio de sesión
+    //     res.redirect('/iniciar-sesion');
+    // });
 }
