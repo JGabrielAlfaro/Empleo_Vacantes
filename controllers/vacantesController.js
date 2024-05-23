@@ -102,3 +102,26 @@ exports.validarVacante = (req,res,next) => {
     }
     next(); //Si hay errores no se ejecuta el Middleware.
 }
+
+exports.eliminarVacante = async (req,res) => {
+    const {id} = req.params;
+
+    const vacante = await Vacante.findById(id);
+
+    if(verificarAutor(vacante, req.user)){
+        await vacante.deleteOne();
+        res.status(200).send('Vacante eliminada');
+    }else {
+        res.status(403).send('Error');
+    }
+    
+    
+}
+
+const verificarAutor = async (vacante = {}, usuario = {}) => {
+  if (!vacante.autor.equals(usuario._id)) {
+    return false;
+  }
+  return true;
+};
+   

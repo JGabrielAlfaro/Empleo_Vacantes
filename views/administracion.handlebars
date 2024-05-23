@@ -7,29 +7,31 @@
 
     <h2>Tus Vacantes</h2>
 
-    {{#if vacantes.length}}
-        {{#each vacantes}}
-            <div class="vacante panel-administracion">
+    <div class="panel-administracion">
+        {{#if vacantes.length}}
+            {{#each vacantes}}
+                <div class="vacante ">
 
-                    <div class="caja">
-                        <h3>{{empresa}}</h3>
-                        <p class="puesto">{{titulo}}</p>
-                    </div>
+                        <div class="caja">
+                            <h3>{{empresa}}</h3>
+                            <p class="puesto">{{titulo}}</p>
+                        </div>
 
-                    <div class="centrar-vertical caja">
-                        <a href="/candidatos/{{id}}" class="btn btn-amarillo">Candidatos</a>
-                    </div>
+                        <div class="centrar-vertical caja">
+                            <a href="/candidatos/{{id}}" class="btn btn-amarillo">Candidatos</a>
+                        </div>
 
-                    <div class="centrar-vertical caja">
-                        <a href="/vacantes/editar/{{url}}" class="btn btn-verde">Editar</a>
-                    </div>
+                        <div class="centrar-vertical caja">
+                            <a href="/vacantes/editar/{{url}}" class="btn btn-verde">Editar</a>
+                        </div>
 
-                    <div class="centrar-vertical caja">
-                        <a href="#" data-eliminar={{id}} class="btn btn-rojo">Eliminar</a>
-                    </div>
-            </div>
-        {{/each}}
-    {{else}}
-        <p>No hay vacantes, crea una.</p>
-    {{/if}}
+                        <div class="centrar-vertical caja">
+                            <a href="#" data-eliminar={{id}} class="btn btn-rojo">Eliminar</a>
+                        </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <p>No hay vacantes, crea una.</p>
+        {{/if}}
+    </div>
 </main>

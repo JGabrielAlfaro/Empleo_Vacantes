@@ -1,3 +1,6 @@
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
 document.addEventListener('DOMContentLoaded',()=>{
     const skills = document.querySelector(".lista-conocimientos")
 
@@ -9,6 +12,12 @@ document.addEventListener('DOMContentLoaded',()=>{
    
     if(skills){
         skills.addEventListener('click', agregarSkills)
+    }
+
+    const vacantesListado = document.querySelector(".panel-administracion");
+
+    if(vacantesListado){
+        vacantesListado.addEventListener('click',accionesListado)   
     }
 
 })
@@ -67,3 +76,52 @@ const skillSeleccionados = () => {
     document.querySelector("#skills").value= skillsArray;
 }
 
+//Eliminar vacaciones
+const accionesListado = e => {
+    e.preventDefault();
+
+
+    if(e.target.dataset.eliminar){
+        //Eliminar por axios
+
+        Swal.fire({
+            title: "Confirmar eliminación?",
+            text: "Una vez eliminada no se puede recuperar!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, Eliminar!",
+            cancelButtonText: 'No, Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Enviar petición a axios
+              const url = `${location.origin}/vacantes/eliminar/${e.target.dataset.eliminar}`
+              //axios para eliminar el registro
+              axios.delete(url,{params: {url}}) 
+                .then(function(respuesta){
+                   if (respuesta.status === 200) {
+                      Swal.fire({
+                        title: "Eliminado!",
+                        text: respuesta.data,
+                        icon: "success"
+                      });
+
+                      //TODO: Eliminar del DOM
+                      e.target.parentElement.parentElement.parentElement.removeChild(e.target.parentElement.parentElement);
+                   }
+                })
+                .catch(() => {
+                    Swal.fire({
+                        title: "Eliminado!",
+                        text: 'No se pudo eliminar la vacante',
+                        icon: "error"
+                    })
+                })
+
+            }
+          });
+    }else if (e.target.tagName === "A") {
+        window.location.href = e.target.href; // Me lleva a la ruta que es sino es el boton de eliminar.
+    }
+}
