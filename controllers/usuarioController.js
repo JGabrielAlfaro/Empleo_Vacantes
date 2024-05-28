@@ -1,5 +1,8 @@
 const mongoose = require ('mongoose');
 const Usuarios = mongoose.model('Usuarios');
+const multer = require('multer');
+const shortid = require('shortid');
+
 
 exports.formCrearCuenta = (req,res) => {
     res.render('crear-cuenta', {
@@ -79,6 +82,7 @@ exports.formEditarPerfil = (req,res) => {
         usuario: req.user,
         cerrarSesion: true,
         nombre: req.user.nombre,
+        imagen: req.user.imagen
     })
 }
 
@@ -93,7 +97,12 @@ exports.editarPerfil = async (req, res) => {
     if(req.body.password){
         usuario.password = req.body.password
     }
-    
+
+
+    if(req.file){
+        usuario.imagen = req.file.filename;
+    }
+
     await usuario.save();
 
     req.flash('correcto', "Se guardaron los cambios correctamente")
@@ -127,8 +136,55 @@ exports.validarPerfil = (req,res,next) => {
             cerrarSesion: true,
             nombre: req.user.nombre,
             mensajes: req.flash(),
+            imagen: req.user.imagen
         })
     }
     next(); //Si hay errores no se ejecuta el Middleware.
 
 }
+
+
+//CONFIGURACION DEL PERFIL, SUBIR IMAGEN
+exports.subirImagen = (req,res,next) => {
+    upload(req,res,function(error){
+        // console.log(error)
+        if(error){
+            if(error instanceof multer.MulterError){
+               if(erro.code === 'LIMIT_FILE_SIZE'){
+                   req.flash('error','El archivo es demasiado grande: Maximo 100kb' );
+               }else {
+                    req.flash('error', error.message);
+               }
+            }else {
+                req.flash('error', error.message);
+            }
+            res.redirect('/administracion');
+            return;
+        }else {
+            return next();
+        }
+    })
+}
+const configuracionMulter = {
+    limits: { fileSize: 1000000 },
+    storage:fileStorage = multer.diskStorage({
+        destination:(req,file,cb) => {
+            cb(null,__dirname + '/../public/uploads/perfiles')
+        },
+        filename: (req,file,cb) => {
+           const extesion = file.mimetype.split('/')[1];
+        //    console.log(`${shortid.generate()}.${extesion}`);
+           cb(null,`${shortid.generate()}.${extesion}`);
+        }
+    }),
+    fileFilter(req,file,cb){
+        if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+            cb(null,true);
+        }else{
+            cb(new Error('Formato no Valido'),false);
+        }
+    },
+   
+}
+
+const upload  = multer(configuracionMulter).single('imagen');

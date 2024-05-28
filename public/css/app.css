@@ -390,6 +390,13 @@ trix-toolbar .trix-button--icon-strike {
 }
 
 /** Admin **/
+.admin-perfil {
+    width: 50px;
+    align-self: flex-start;
+    margin-right: 1rem;
+    border-radius: 50%;
+
+}
 
 p.candidatos {
     font-weight: 400;
@@ -401,11 +408,7 @@ p.candidatos {
     text-decoration: none;
     color: #616065;
 }
-.admin-perfil {
-    width: 120px;
-    align-self: flex-start;
-    margin-right: 1rem;
-}
+
 .cerrar-sesion p, 
 .cerrar-sesion a {
     margin:  0 2rem 0 0 ;
@@ -415,10 +418,13 @@ p.candidatos {
     margin-top: 2rem;
     color: white;
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .cerrar-sesion img {
         width: 80px;
 }
+
 .botones {
     display: flex;
     justify-content: flex-start;
@@ -515,3 +521,4 @@ p.candidatos {
     color: white;
     font-size: 1.8rem;
 }
+
