@@ -4,6 +4,8 @@
 //Segunda forma de importar.
 const mongoose = require ('mongoose');
 const Vacante = mongoose.model('Vacante')
+const multer = require('multer');
+const shortid = require('shortid');
 
 exports.formularioNuevaVacante = (req,res) => {
     res.render('nueva-vacante',{
@@ -126,4 +128,89 @@ const verificarAutor = async (vacante = {}, usuario = {}) => {
   }
   return true;
 };
+//Almacenar los candidatos en la base de datos
+exports.contactar = async (req,res,next) => {
    
+    const vacante = await Vacante.findOne({url: req.params.url});
+    if(!vacante) return next();
+
+    //Construimos el objeto nuevoCandidato
+    const nuevoCandidato = {
+        nombre: req.body.nombre,
+        email: req.body.email,
+        cv: req.file.filename
+    }
+    //Almacenar la vacante.
+    vacante.candidatos.push(nuevoCandidato);
+    await vacante.save();
+
+    //Mensaje flash y redireccionar
+    req.flash('correcto', 'Se envio correctamente tu CV');
+    res.redirect('/');
+
+}
+//Subir archivo en pdf
+
+exports.subirCV =  (req,res,next) => {
+    upload(req,res,function(error){
+        // console.log(error)
+        if(error){
+            if(error instanceof multer.MulterError){
+               if(error.code === 'LIMIT_FILE_SIZE'){
+                   req.flash('error','El archivo es demasiado grande: Maximo 100kb' );
+               }else {
+                    req.flash('error', error.message);
+               }
+            }else {
+                req.flash('error', error.message);
+            }
+            res.redirect('back');
+            return;
+        }else {
+            return next();
+        }
+    })
+}
+
+const configuracionMulter = {
+    limits: { fileSize: 1000000 },
+    storage:fileStorage = multer.diskStorage({
+        destination:(req,file,cb) => {
+            cb(null,__dirname + '/../public/uploads/cv')
+        },
+        filename: (req,file,cb) => {
+           const extesion = file.mimetype.split('/')[1];
+        //    console.log(`${shortid.generate()}.${extesion}`);
+           cb(null,`${shortid.generate()}.${extesion}`);
+        }
+    }),
+    fileFilter(req,file,cb){
+        if(file.mimetype === 'application/pdf'){
+            cb(null,true);
+        }else{
+            cb(new Error('Formato no Valido'),false);
+        }
+    },
+   
+}
+
+const upload  = multer(configuracionMulter).single('cv');
+
+
+//Mostrar la vacante
+exports.mostrarCandidatos = async (req,res,next) => {
+  console.log(req.params.id)
+  const vacante = await Vacante.findById(req.params.id);
+  if(vacante.autor.toString() !== req.user._id.toString()){
+    return next(); 
+  }
+  if(!vacante) return next();
+
+  res.render('candidatos', {
+    nombrePagina: `Candidatos Vacante- ${vacante.titulo}`,
+    cerrarSesion: true,
+    nombre: req.user.nombre,
+    imagen: req.user.imagen,
+    candidatos: vacante.candidatos
+  })
+}

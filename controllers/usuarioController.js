@@ -150,7 +150,7 @@ exports.subirImagen = (req,res,next) => {
         // console.log(error)
         if(error){
             if(error instanceof multer.MulterError){
-               if(erro.code === 'LIMIT_FILE_SIZE'){
+               if(error.code === 'LIMIT_FILE_SIZE'){
                    req.flash('error','El archivo es demasiado grande: Maximo 100kb' );
                }else {
                     req.flash('error', error.message);
