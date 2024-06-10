@@ -28,9 +28,20 @@ module.exports = () => {
     router.get('/crear-cuenta',usuarioController.formCrearCuenta);
     router.post('/crear-cuenta',usuarioController.validaRegistro,usuarioController.crearUsuario);
 
+
     //Autenticar usuario.
     router.get('/iniciar-sesion',usuarioController.formIniciarSesion);
     router.post('/iniciar-sesion',authController.autenticarUsuario);
+    
+    //Resetear Password (eamil)
+    router.get('/restablecer-password',authController.formReestablecerPassword);
+    router.post('/restablecer-password',authController.enviarToken);
+
+    //Resetear password (almacenar en la bd)
+    router.get('/restablecer-password/:token',authController.restablecerPassword);
+    router.post('/restablecer-password/:token',authController.guardarPassword);
+
+
 
     //Cierre de sesión
     router.get('/cerrar-sesion',authController.verificarUsuario,authController.cerrarSesion);
@@ -59,7 +70,6 @@ module.exports = () => {
         authController.verificarUsuario,
         vacantesController.mostrarCandidatos
     )
-
 
     return router;
 }
