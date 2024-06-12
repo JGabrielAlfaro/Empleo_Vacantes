@@ -48,6 +48,9 @@ const vacantesSchema = new mongoose.Schema({
     }
 })
 
+//Creando un indice.
+vacantesSchema.index({ titulo: 'text', descripcion: 'text' });
+
 //Configurando un middleware antes de guardar.
 vacantesSchema.pre('save',function(next){
    //Crear la URL

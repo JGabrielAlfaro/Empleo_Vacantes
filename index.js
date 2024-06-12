@@ -17,7 +17,8 @@ const path = require('path'); // Importamos path para obtener la URL de elemento
 
 //Validaciones
 const expressValidator = require('express-validator');
-const flash = require('connect-flash');
+const flash = require('connect-flash'); //Manejo de errores.
+const createError = require('http-errors');//Manejo de errores. Otra tipo.
 
 //Validaciones de password
 const passport = require('./config/passport')
@@ -81,4 +82,19 @@ app.use((req,res,next) => {
 // Configuración del router
 app.use('/', router());
 
+// 404 Pagina no existente.
+app.use(function (req, res, next) {
+    next(createError(404,"No Encontrado"));
+})
+
+//Administracion de los errores.
+app.use((error,req,res) => {
+    // new Error('Un mensaje de error')
+    res.locals.mensaje = error.message;
+    const status = error.status || 500;
+    res.locals.status = status;
+    res.status(status); //para que sepa el servidor que es un error.
+    console.log(status);
+    res.render('error');
+})
 app.listen(process.env.PUERTO);
